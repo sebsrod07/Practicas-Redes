@@ -4,10 +4,10 @@ void Calculadora(unsigned char ip[]);
 void imprimeTipo(unsigned char ip[], unsigned char MR[]);
 int main()
 {
-    unsigned char ip[]={128,17,255,255}; // 000 0000
-        Calculadora(ip);
+    unsigned char ip[]={192,34,7,255}; // 000 0000
+    Calculadora(ip);
 
-        }
+}
 void Calculadora(unsigned char ip[])
 {
     unsigned char MR[]={255,0,0,0};
@@ -32,14 +32,14 @@ void Calculadora(unsigned char ip[])
         else                                                                                                                                                                                                                      
         {
             MR[1]=255;                                                                                                                                                                                      
-            printf("Es de clase B");
+            printf("Es de clase B\n");
             imprimeTipo(ip,MR);                                                                                                                                                                             
         }
     }
     else
     {
-        imprimeTipo(ip,MR);
         printf("Es de clase A\n");
+        imprimeTipo(ip,MR);
     }                                                                                                                                                                                                                                                                              
        
 
@@ -82,9 +82,9 @@ void Calculadora(unsigned char ip[])
             
         }
         if(flag)
-            printf("Es de Difusion");
+            printf("Es de Difusion\n");
         else
-            printf("Es de Host");
+            printf("Es de Host\n");
         
     }
     else 
@@ -118,9 +118,9 @@ void Calculadora(unsigned char ip[])
             
         }
         if(flag)
-            printf("Es de Red");
+            printf("Es de Red\n");
         else
-            printf("Es de Host");
+            printf("Es de Host\n");
     }
     
 
