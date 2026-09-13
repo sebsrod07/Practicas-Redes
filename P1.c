@@ -2,6 +2,7 @@
 #include <stdbool.h>
 void Calculadora(unsigned char ip[]);
 void imprimeTipo(unsigned char ip[], unsigned char MR[]);
+void datosRed(unsigned char ip[] ,unsigned char MR[]);
 int main()
 {
     unsigned char ip[]={192,34,7,255}; // 000 0000
@@ -27,19 +28,22 @@ void Calculadora(unsigned char ip[])
                 MR[1]=MR[2]=255;
                 printf("Es de clase C\n");
                 imprimeTipo(ip,MR);
+                datosRed(ip,MR);
             }
         }
         else                                                                                                                                                                                                                      
         {
             MR[1]=255;                                                                                                                                                                                      
             printf("Es de clase B\n");
-            imprimeTipo(ip,MR);                                                                                                                                                                             
+            imprimeTipo(ip,MR);
+            datosRed(ip,MR);                                                                                                                                                                             
         }
     }
     else
     {
         printf("Es de clase A\n");
         imprimeTipo(ip,MR);
+        datosRed(ip,MR);
     }                                                                                                                                                                                                                                                                              
        
 
@@ -122,8 +126,18 @@ void Calculadora(unsigned char ip[])
         else
             printf("Es de Host\n");
     }
-    
-
-    
-   
   }
+  void datosRed(unsigned char ip[] ,unsigned char MR[]){
+			unsigned char red[4], i;
+			for(i=0;i<4;i++){
+				red[i]=ip[i]&MR[i];
+			}
+			printf("La direccion de red es: %d.%d.%d.%d\n",red[0],red[1],red[2],red[3]);
+			for(i=0;i<4;i++){
+				ip[i]=ip[i]|(~MR[i]);
+			}
+			printf("La direccion de Difusion es: %d.%d.%d.%d\n",ip[0],ip[1],ip[2],ip[3]);
+			
+			printf("Rango inicial: %d.%d.%d.%d\n",red[0],red[1],red[2],red[3]+1);
+			printf("Rango inicial: %d.%d.%d.%d\n",ip[0],ip[1],ip[2],ip[3]-1);
+	}
