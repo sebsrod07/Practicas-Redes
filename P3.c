@@ -1,7 +1,7 @@
 #include <stdio.h>
 
 char supervision[][5] = {"RR", "RNR", "REJ", "SREJ"};
-char UC[][6] = {"UI", "SIM","-", "SARM", "UP","-","-", "SABM", "DISC","-","-" "SARME", "-", "SABME", "SNRM","-"}; //comando
+char UC[][6] = {"UI", "SIM","-", "SARM", "UP","-","-", "SABM", "DISC","-","-","SARME", "-","-","-", "SABME", "SNRM","-"}; //comando
 char UR[][6] = {"UI", "RIM","-", "DM", "-", "-","-", "-","RD", "-","-","-","UA", "-", "-","-","-", "ERMR"}; //respuesta
 
 unsigned char t[][200] =
@@ -237,12 +237,13 @@ void LLC(int i)
             printf("%s, N(r)=%d\n",supervision[(t[i][16] >> 2) & 3], (t[i][17] >> 1));
             break;
         case 3:
-        printf("TRAMA U\n");
-            if (t[i][16] & 16)
-                if(t[i][15]&1)
-                    printf("%s\n", UR[ ((t[i][16]>>3)&28) | ((t[i][16]>>2)&4)]);
-                else
-                    printf("%s\n", UC[ ((t[i][16]>>3)&28) | ((t[i][16]>>2)&4)]);
+        
+            printf("TRAMA U\n");
+                if (t[i][16] & 16)
+                    if(t[i][15]&1)
+                        printf("%s\n", UR[ (((t[i][16]>>3)&28) | ((t[i][16]>>2)&3))]);
+                    else
+                        printf("%s\n", UC[ (((t[i][16]>>3)&28) | ((t[i][16]>>2)&3))]);
             break;
         default:
             printf("TRAMA I\n N(s)=%d, N(r)=%d\n",(t[i][16] >> 1),(t[i][17] >> 1));
