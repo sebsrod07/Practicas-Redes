@@ -229,28 +229,45 @@ unsigned char t[][200] =
 void LLC(int i)
 {
     printf("CABECERA LLC\n");
+    printf("LLC de %d bytes\n", ((t[i][12] << 8) | t[i][13]));
     switch (t[i][16] & 3)
-            {
-                case 1:
-                printf("TRAMA S\n");
-                    printf("%s, N(r)=%d\n",supervision[(t[i][16] >> 2) & 3], (t[i][17] >> 1));
-                    break;
-                case 3:
-                printf("TRAMA U\n");
-                    if (t[i][16] & 16)
-                        if(t[i][15]&1)
-                            printf("%s\n", UR[ ((t[i][16]>>3)&28) | ((t[i][16]>>2)&4)]);
-                        else
-                            printf("%s\n", UC[ ((t[i][16]>>3)&28) | ((t[i][16]>>2)&4)]);
-                    break;
-                default:
-                   printf("TRAMA I\n N(s)=%d, N(r)=%d\n",(t[i][16] >> 1),(t[i][17] >> 1));
-                    break;
-            }
-            printf("\n\n\n\n");
+    {
+        case 1:
+        printf("TRAMA S\n");
+            printf("%s, N(r)=%d\n",supervision[(t[i][16] >> 2) & 3], (t[i][17] >> 1));
+            break;
+        case 3:
+        printf("TRAMA U\n");
+            if (t[i][16] & 16)
+                if(t[i][15]&1)
+                    printf("%s\n", UR[ ((t[i][16]>>3)&28) | ((t[i][16]>>2)&4)]);
+                else
+                    printf("%s\n", UC[ ((t[i][16]>>3)&28) | ((t[i][16]>>2)&4)]);
+            break;
+        default:
+            printf("TRAMA I\n N(s)=%d, N(r)=%d\n",(t[i][16] >> 1),(t[i][17] >> 1));
+            break;
+    }
 }
 
+void IP(int i)
+{
+    printf("CABECERA IP\n");
+    printf("IP de %d bytes\n", ((t[i][12] << 8) | t[i][13]));
+    printf("VERSION: %d\n", t[i][14]>>4);
+    printf("IHL: %d\n", (t[i][14]&15)*4);
+    printf("D: %d, T: %d,   R: %d,  C: %d,  O: %d   \n", t[i][15]&16, t[i][15]&8,t[i][15]&4,t[i][15]&2,t[i][15]&1);
+    printf("Tamaño total: %d bytes\n", (t[i][16]<<8)|(t[i][17]));
+    printf("ID: %d\n",  (t[i][18]<<8)|(t[i][19]));
+    printf("D: %d,  M: %d\n", t[i][20]&64, t[i][20]&32);
+    printf("Offset: %d\n", (((t[i][20]&31)<<8)|(t[i][21]))*8);
+    printf("TTL: %d\n", t[i][22]);
+    printf("Protocolo: %d\n", t[i][23]);
+    printf("Checksum header: %d\n", (t[i][24]<<8)|(t[i][25]));
+    printf("Source Address: %d.%d.%d.%d\n", t[i][26], t[i][27], t[i][28], t[i][29]);
+    printf("Destination Address: %d.%d.%d.%d\n", t[i][30], t[i][31], t[i][32], t[i][33]);
 
+}
 int main(){
     int i;
     unsigned char numerotramas = 36;
@@ -261,15 +278,17 @@ int main(){
 		printf("CABECERA ETHERNET\n");
 		printf("MAC DESTINO: %.2x:%.2x:%.2x:%.2x:%.2x:%.2x\n",t[i][0],t[i][1],t[i][2],t[i][3],t[i][4],t[i][5]);
 		printf("MAC ORIGEN: %.2x:%.2x:%.2x:%.2x:%.2x:%.2x\n",t[i][6],t[i][7],t[i][8],t[i][9],t[i][10],t[i][11]);
-		printf("LLC de %d bytes\n", ((t[i][12] << 8) | t[i][13]));
+		printf("ToT de %d bytes\n", ((t[i][12] << 8) | t[i][13]));
 		printf("===================================\n");
         
 
         //LLC 
 
-        if(((t[i][12] << 8) | t[i][13])==2054){printf(" ES ARP \n");}
+        if(((t[i][12] << 8) | t[i][13])==2054)
+        {printf(" ES ARP \n");
+        }
             
-        else if(((t[i][12] << 8) | t[i][13])==2048){printf(" ES IP \n");}
+        else if(((t[i][12] << 8) | t[i][13])==2048){IP(i);}
 
         else if (((t[i][12] << 8) | t[i][13]) <= 1500){
                 LLC(i);
@@ -277,6 +296,7 @@ int main(){
         else{
            printf(" ES OTRO TIPO DE TRAMA\n");
         }
+        printf("\n\n\n\n");
     }
     return 0;
 }
